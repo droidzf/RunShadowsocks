@@ -1,4 +1,5 @@
 #!/bin/bash
+apt-get update
 apt-get -y install python-setuptools m2crypto supervisor python-pip
 pip install shadowsocks
 echo -e "{\n\"server\":\"0.0.0.0\",\n\"server_port\":2345,\n\"local_port\":1080,\n\"password\":\"your_password\",\n\"timeout\":600,\n\"method\":\"aes-256-cfb\"\n}" >> /etc/shadowsocks.json
