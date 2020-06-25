@@ -21,3 +21,41 @@ wget  -N --no-check-certificate https://github.com/droidzf/RunShadowsocks/releas
 vim /usr/local/lib/python2.7/dist-packages/shadowsocks/crypto/openssl.py
 52行libcrypto.EVP_CIPHER_CTX_cleanup.argtypes = (c_void_p,) 改为libcrypto.EVP_CIPHER_CTX_reset.argtypes = (c_void_p,)
 111行将libcrypto.EVP_CIPHER_CTX_cleanup(self._ctx) 改为libcrypto.EVP_CIPHER_CTX_reset(self._ctx)
+
+BBR 加速
+
+Linux kernel 4.9 及以上已支持 tcp_bbr
+
+1.查看系统内核版本：
+
+uname -r
+
+2.开启BBR：
+
+echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
+
+echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+
+3.保存生效：
+
+sysctl -p
+
+4.检查BBR是否启用：
+
+sysctl net.ipv4.tcp_available_congestion_control
+
+返回值一般为：net.ipv4.tcp_available_congestion_control = reno cubic bbr
+
+sysctl net.ipv4.tcp_congestion_control
+
+返回值一般为：net.ipv4.tcp_congestion_control = bbr
+
+sysctl net.core.default_qdisc
+
+返回值一般为：net.core.default_qdisc = fq
+
+lsmod | grep bbr
+
+返回值有 tcp_bbr 模块则BBR已启动：
+
+tcp_bbr 20480 10
