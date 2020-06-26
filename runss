@@ -1,6 +1,16 @@
 #!/bin/bash
 apt-get update
-apt-get -y install python-setuptools m2crypto supervisor python-pip
-pip install shadowsocks
-echo -e "{\n\"server\":\"0.0.0.0\",\n\"server_port\":2345,\n\"local_port\":1080,\n\"password\":\"your_password\",\n\"timeout\":600,\n\"method\":\"aes-256-cfb\"\n}" >> /etc/shadowsocks.json
+apt-get -y install python-setuptools python-m2crypto supervisor python3-pip
+pip3 install shadowsocks
+sed -ie "s/cleanup/reset/g" /usr/local/lib/python3.6/dist-packages/shadowsocks/crypto/openssl.py
+
+port=1111
+password="ss!@#$%^"
+if [ $1 ]; then
+port=$1
+fi
+if [ $2 ]; then
+password=$2
+fi
+echo -e "{\n\"server\":\"0.0.0.0\",\n\"server_port\":$port,\n\"local_port\":1080,\n\"password\":\"$password\",\n\"timeout\":600,\n\"method\":\"aes-256-cfb\"\n}" >> shadowsocks.json
 ssserver -c /etc/shadowsocks.json -d start
